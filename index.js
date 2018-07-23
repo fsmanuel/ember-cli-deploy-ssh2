@@ -155,20 +155,12 @@ module.exports = {
 
         this.log('Uploading `applicationFiles` to ' + destination);
 
-        var promises = [];
-        files.forEach(function(file) {
-          var src = path.join(distDir, file);
-          var dest = path.posix.join(destination, file);
-
-          promises.push(client.putFile(src, dest));
-        });
-
-        return Promise.all(promises).then(
+        return client.putFiles(files, distDir, destination).then(
           function() {
             _this.log('Successfully uploaded file/s.', { color: 'green' });
           },
-          function() {
-            _this.log('Failed to upload file/s.', { color: 'red' });
+          function(error) {
+            _this.log('Failed to upload file/s.' + error, { color: 'red' });
           }
         );
       },
